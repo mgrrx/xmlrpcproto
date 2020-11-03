@@ -76,7 +76,7 @@ def _(value: int) -> _Element:
 
 @py2xml.register(Binary)
 def _(value: Binary) -> _Element:
-    return E("base64", base64.b64encode(value))
+    return E("base64", str(base64.b64encode(value).decode()))
 
 
 @py2xml.register(bool)
