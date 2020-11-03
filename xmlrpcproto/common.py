@@ -117,7 +117,9 @@ def xml2datetime(value: _Element) -> datetime:
             pass
 
     raise ValueError(
-        f"It's impossible to parse dataetime with formats {TIME_FORMATS}"
+        "It's impossible to parse dataetime with formats {}".format(
+            TIME_FORMATS
+        )
     )
 
 
