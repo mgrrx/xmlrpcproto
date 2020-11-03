@@ -23,4 +23,5 @@ setup(
     packages=find_packages(exclude=("tests",)),
     install_requires=("lxml"),
     python_requires=">=3.5",
+    extras_require={"develop": ["pytest", "pytest-cov", "xmltodict"]},
 )
