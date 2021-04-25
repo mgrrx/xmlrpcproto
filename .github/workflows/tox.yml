@@ -11,15 +11,12 @@ on:
 
 jobs:
   lint:
-
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         linter:
           - lint
-          - checkdoc
 
     steps:
       - uses: actions/checkout@v2
