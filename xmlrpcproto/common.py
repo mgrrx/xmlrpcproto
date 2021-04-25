@@ -129,7 +129,6 @@ def xml2struct(element: _Element) -> XmlRpcStructType:
 
 def xml2array(element: _Element) -> XmlRpcArrayType:
     values = cast(List[_Element], element.xpath("./data/value"))
-    print(element, values)
     return [xml2py(i) for i in values]
 
 

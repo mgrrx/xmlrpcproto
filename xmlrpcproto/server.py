@@ -23,15 +23,12 @@ def parse_xml(xml_string: bytes) -> _Element:
 
 
 def build_xml(tree: _Element) -> Union[str, bytes]:
-    s = b'<?xml version="1.0"?>\n' + tostring(tree, encoding="ASCII")
-    print(s)
-    return s
+    return b'<?xml version="1.0"?>\n' + tostring(tree, encoding="ASCII")
 
 
 def parse_reqeuest(
     body: bytes, headers: Mapping[str, str]
 ) -> Tuple[str, List[XmlRpcTypes]]:
-    print(body)
     if b"xml" not in headers.get(b"content-type", b""):
         raise ValueError()
 
