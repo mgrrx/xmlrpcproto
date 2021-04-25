@@ -1,14 +1,13 @@
-from typing import Union, List, Mapping, Tuple, cast
+from typing import List, Mapping, Tuple, Union, cast
+
 from lxml.builder import E
-from lxml.etree import _Element, XMLParser, fromstring, tostring
+from lxml.etree import XMLParser, _Element, fromstring, tostring
 
 from .common import XmlRpcTypes, py2xml, validate_schema, xml2py
 
 
 def format_success(result: XmlRpcTypes) -> _Element:
-    return E(
-        "methodResponse", E("params", E("param", E("value", py2xml(result))))
-    )
+    return E("methodResponse", E("params", E("param", E("value", py2xml(result)))))
 
 
 def format_error(exception: Exception) -> _Element:
@@ -24,12 +23,15 @@ def parse_xml(xml_string: bytes) -> _Element:
 
 
 def build_xml(tree: _Element) -> Union[str, bytes]:
-    return b'<?xml version="1.0"?>\n' + tostring(tree, encoding="ASCII")
+    s = b'<?xml version="1.0"?>\n' + tostring(tree, encoding="ASCII")
+    print(s)
+    return s
 
 
 def parse_reqeuest(
     body: bytes, headers: Mapping[str, str]
 ) -> Tuple[str, List[XmlRpcTypes]]:
+    print(body)
     if b"xml" not in headers.get(b"content-type", b""):
         raise ValueError()
 

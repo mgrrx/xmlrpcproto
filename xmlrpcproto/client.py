@@ -1,26 +1,13 @@
 from typing import Iterable, List, Union, cast
 
 from lxml.builder import E
-from lxml.etree import _Element, XMLParser, fromstring, tostring
+from lxml.etree import XMLParser, _Element, fromstring, tostring
 
-from .common import (
-    XmlRpcTypes,
-    XmlRpcStructType,
-    py2xml,
-    validate_schema,
-    xml2py,
-)
-from .exceptions import (
-    ParseError,
-    ServerError,
-    XMLRPCSystemError,
-    xml2py_exception,
-)
+from .common import XmlRpcStructType, XmlRpcTypes, py2xml, validate_schema, xml2py
+from .exceptions import ParseError, ServerError, XMLRPCSystemError, xml2py_exception
 
 
-def build_xml(
-    method_name: str, *args: Iterable[XmlRpcTypes]
-) -> Union[str, bytes]:
+def build_xml(method_name: str, *args: Iterable[XmlRpcTypes]) -> Union[str, bytes]:
     return b'<?xml version="1.0"?>\n' + tostring(
         E(
             "methodCall",
@@ -34,9 +21,7 @@ def build_xml(
     )
 
 
-def parse_xml(
-    body: bytes, method_name: str, *, huge_tree=False
-) -> XmlRpcTypes:
+def parse_xml(body: bytes, method_name: str, *, huge_tree=False) -> XmlRpcTypes:
     parser = XMLParser(huge_tree=huge_tree)
     response = fromstring(body, parser)
     if not validate_schema(response):
@@ -60,6 +45,5 @@ def parse_xml(
         )
 
     raise ParseError(
-        f'Respond body for method "{method_name}" '
-        "not contains any response."
+        f'Respond body for method "{method_name}" ' "not contains any response."
     )

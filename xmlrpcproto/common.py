@@ -6,7 +6,7 @@ from types import GeneratorType
 from typing import Any, Dict, List, Union, cast
 
 from lxml.builder import E
-from lxml.etree import _Element, RelaxNG
+from lxml.etree import RelaxNG, _Element
 
 NoneType = type(None)
 
@@ -117,9 +117,7 @@ def xml2datetime(value: _Element) -> datetime:
             pass
 
     raise ValueError(
-        "It's impossible to parse dataetime with formats {}".format(
-            TIME_FORMATS
-        )
+        "It's impossible to parse dataetime with formats {}".format(TIME_FORMATS)
     )
 
 
@@ -131,13 +129,15 @@ def xml2struct(element: _Element) -> XmlRpcStructType:
 
 def xml2array(element: _Element) -> XmlRpcArrayType:
     values = cast(List[_Element], element.xpath("./data/value"))
+    print(element, values)
     return [xml2py(i) for i in values]
+
 
 def unwrap_value(element: _Element):
     try:
         value = next(element.iterchildren())
     except StopIteration:
-        value = element.text or ''
+        value = element.text or ""
     return xml2py(value)
 
 

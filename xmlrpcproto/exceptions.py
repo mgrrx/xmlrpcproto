@@ -1,5 +1,5 @@
-from lxml.etree import _Element
 from lxml.builder import E
+from lxml.etree import _Element
 
 from .common import py2xml
 

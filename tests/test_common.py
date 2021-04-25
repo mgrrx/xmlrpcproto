@@ -2,9 +2,9 @@ from datetime import datetime
 
 import pytest
 import xmltodict
-from xmlrpcproto.common import Binary, py2xml, xml2py
 from lxml import etree
 
+from xmlrpcproto.common import Binary, py2xml, xml2py
 
 CASES = [
     (
