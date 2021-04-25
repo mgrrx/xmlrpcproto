@@ -24,25 +24,20 @@ def parse_xml(xml_string: bytes) -> _Element:
 
 
 def build_xml(tree: _Element) -> Union[str, bytes]:
-    return tostring(tree, xml_declaration=True, encoding="utf-8")
+    return b'<?xml version="1.0"?>\n' + tostring(tree, encoding="ASCII")
 
 
 def parse_reqeuest(
     body: bytes, headers: Mapping[str, str]
 ) -> Tuple[str, List[XmlRpcTypes]]:
-    if "xml" not in headers.get("Content-Type", ""):
+    if b"xml" not in headers.get(b"content-type", b""):
         raise ValueError()
 
     xml_request = parse_xml(body)
 
-    method_name = cast(str, xml_request.xpath("//methodName[1]/text()"))
+    method_name = cast(str, xml_request.xpath("//methodName[1]/text()")[0])
 
-    params = cast(
-        List[Union[_Element, str]],
-        xml_request.xpath(
-            "//params/param/value/* | //params/param/value[not(*)]/text()"
-        ),
-    )
+    params = cast(List[_Element], xml_request.xpath("//params/param/value"))
     args = [xml2py(param) for param in params]
 
     return method_name, args

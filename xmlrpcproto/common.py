@@ -124,14 +124,21 @@ def xml2datetime(value: _Element) -> datetime:
 
 
 def xml2struct(element: _Element) -> XmlRpcStructType:
-    values = cast(List[_Element], element.xpath("./member/value/*"))
+    values = cast(List[_Element], element.xpath("./member/value"))
     names = cast(List[str], element.xpath("./member/name/text()"))
     return {str(name): xml2py(value) for name, value in zip(names, values)}
 
 
 def xml2array(element: _Element) -> XmlRpcArrayType:
-    values = cast(List[_Element], element.xpath("./data/value/*"))
+    values = cast(List[_Element], element.xpath("./data/value"))
     return [xml2py(i) for i in values]
+
+def unwrap_value(element: _Element):
+    try:
+        value = next(element.iterchildren())
+    except StopIteration:
+        value = element.text or ''
+    return xml2py(value)
 
 
 XML2PY_TYPES = {
@@ -146,6 +153,7 @@ XML2PY_TYPES = {
     "int": lambda x: int(x.text),
     "i4": lambda x: int(x.text),
     "nil": lambda x: None,
+    "value": unwrap_value,
 }
 
 

@@ -21,7 +21,7 @@ from .exceptions import (
 def build_xml(
     method_name: str, *args: Iterable[XmlRpcTypes]
 ) -> Union[str, bytes]:
-    return tostring(
+    return b'<?xml version="1.0"?>\n' + tostring(
         E(
             "methodCall",
             E("methodName", method_name),
@@ -30,8 +30,7 @@ def build_xml(
                 *(E("param", E("value", py2xml(arg))) for arg in args),
             ),
         ),
-        xml_declaration=True,
-        encoding="utf-8",
+        encoding="ASCII",
     )
 
 
@@ -43,14 +42,14 @@ def parse_xml(
     if not validate_schema(response):
         raise ValueError("Invalid body")
 
-    result = cast(List[_Element], response.xpath("//params/param/value/*"))
+    result = cast(List[_Element], response.xpath("//params/param/value"))
     if result:
         if len(result) < 2:
             return xml2py(result[0])
 
         return [xml2py(item) for item in result]
 
-    fault = cast(List[_Element], response.xpath("//fault/value/*"))
+    fault = cast(List[_Element], response.xpath("//fault/value"))
     if fault:
         err = cast(XmlRpcStructType, xml2py(fault[0]))
 
